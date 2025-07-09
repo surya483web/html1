@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,15 +25,17 @@
             padding: 0 20px;
         }
 
-        /* Page System */
+        /* Page transitions */
         .page {
             display: none;
             min-height: 100vh;
-            animation: fadeIn 0.5s ease-in-out;
+            transition: all 0.3s ease;
         }
 
         .page.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         @keyframes fadeIn {
@@ -509,6 +511,47 @@
                     </div>
                     <button type="submit" class="btn">Sign In</button>
                 </form>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="color: #666;">Don't have an account? 
+                        <a href="#" onclick="showSignUp()" style="color: #667eea; text-decoration: none; font-weight: 600;">Sign Up</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Page -->
+    <div id="signup-page" class="page">
+        <div class="login-page">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>Create Account</h1>
+                    <p>Join us today and get started</p>
+                </div>
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email Address</label>
+                        <input type="email" id="signup-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm-password">Confirm Password</label>
+                        <input type="password" id="signup-confirm-password" name="confirm-password" required>
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                </form>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="color: #666;">Already have an account? 
+                        <a href="#" onclick="showLogin()" style="color: #667eea; text-decoration: none; font-weight: 600;">Sign In</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -887,6 +930,16 @@
             document.getElementById(pageId).classList.add('active');
         }
 
+        // Show Sign Up Page
+        function showSignUp() {
+            showMainPage('signup-page');
+        }
+
+        // Show Login Page
+        function showLogin() {
+            showMainPage('login-page');
+        }
+
         // Login Form Handler
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -895,11 +948,65 @@
             
             // Simple validation (in real app, this would be server-side)
             if (email && password) {
-                showMainPage('verification-page');
+                // Create a new page transition effect
+                createPageTransition('verification-page');
             } else {
                 alert('Please fill in all fields');
             }
         });
+
+        // Sign Up Form Handler
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').value;
+                
+                // Validation
+                if (!name || !email || !password || !confirmPassword) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    alert('Password must be at least 6 characters long');
+                    return;
+                }
+                
+                // Create account success - go to verification
+                createPageTransition('verification-page');
+            });
+        });
+
+        // Create smooth page transition
+        function createPageTransition(targetPageId) {
+            const currentPage = document.querySelector('.page.active');
+            const targetPage = document.getElementById(targetPageId);
+            
+            // Add fade out effect to current page
+            currentPage.style.opacity = '0';
+            currentPage.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                currentPage.classList.remove('active');
+                targetPage.classList.add('active');
+                targetPage.style.opacity = '0';
+                targetPage.style.transform = 'translateY(20px)';
+                
+                // Animate in new page
+                setTimeout(() => {
+                    targetPage.style.opacity = '1';
+                    targetPage.style.transform = 'translateY(0)';
+                }, 50);
+            }, 300);
+        }
 
         // Verification Code Handler
         const codeInputs = document.querySelectorAll('.code-digit');
@@ -920,7 +1027,8 @@
         function verifyCode() {
             const code = Array.from(codeInputs).map(input => input.value).join('');
             if (code.length === 6) {
-                showMainPage('main-app');
+                // Create transition to main app
+                createPageTransition('main-app');
             } else {
                 alert('Please enter the complete verification code');
             }
@@ -969,9 +1077,10 @@
         // Logout
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                showMainPage('login-page');
-                // Reset form
+                createPageTransition('login-page');
+                // Reset forms
                 document.getElementById('login-form').reset();
+                document.getElementById('signup-form').reset();
                 // Clear verification code
                 codeInputs.forEach(input => input.value = '');
                 // Reset navigation
@@ -979,7 +1088,9 @@
                     link.classList.remove('active');
                 });
                 document.querySelector('.nav-link[onclick="showPage(\'dashboard\')"]').classList.add('active');
-                showPage('dashboard');
+                setTimeout(() => {
+                    showPage('dashboard');
+                }, 500);
             }
         }
 
