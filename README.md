@@ -1,9 +1,10 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced AI Assistant</title>
+    <title>Advanced AI Chatbot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,99 +13,123 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
 
-        .container {
+        .app-container {
             display: flex;
             height: 100vh;
             position: relative;
         }
 
-        /* History Dashboard */
-        .history-panel {
-            width: 300px;
+        /* Sidebar History */
+        .sidebar {
+            width: 320px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 0 20px 20px 0;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-        }
-
-        .history-panel.collapsed {
-            transform: translateX(-250px);
-        }
-
-        .history-header {
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-280px);
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
+            justify-content: space-between;
         }
 
-        .history-title {
+        .sidebar-title {
             font-size: 18px;
-            font-weight: 600;
-            color: #333;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .toggle-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .toggle-sidebar {
+            background: none;
             border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            transition: transform 0.2s ease;
-        }
-
-        .toggle-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .history-list {
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
-        }
-
-        .history-item {
-            padding: 12px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 10px;
-            margin-bottom: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            border-left: 4px solid transparent;
-        }
-
-        .history-item:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-left-color: #667eea;
-            transform: translateX(5px);
-        }
-
-        .history-item-title {
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .history-item-time {
-            font-size: 12px;
             color: #666;
         }
 
+        .toggle-sidebar:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .history-item {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.2);
+            transform: translateX(4px);
+        }
+
+        .history-item.active {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .history-item-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 14px;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .history-item-preview {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .history-item-time {
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         /* Main Chat Area */
-        .main-chat {
+        .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -113,37 +138,60 @@
 
         .chat-header {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 20px 20px 0 0;
-            margin: 20px 20px 0 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .chat-title {
             font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-features-toggle {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-features-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
             overflow-y: auto;
-            margin: 0 20px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 0;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
         }
 
         .message {
-            margin-bottom: 20px;
             display: flex;
-            align-items: flex-start;
             gap: 12px;
+            margin-bottom: 24px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .message.user {
@@ -157,76 +205,98 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-size: 18px;
             color: white;
             flex-shrink: 0;
+            font-weight: 600;
         }
 
         .message.user .message-avatar {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
 
         .message.bot .message-avatar {
-            background: linear-gradient(45deg, #f093fb, #f5576c);
+            background: linear-gradient(135deg, #f093fb, #f5576c);
         }
 
         .message-content {
+            flex: 1;
             background: white;
-            padding: 15px 20px;
-            border-radius: 20px;
-            max-width: 70%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 16px 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             position: relative;
+            line-height: 1.6;
         }
 
         .message.user .message-content {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
         }
 
         .message.bot .message-content {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            background: white;
             color: #333;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.6;
+            margin-top: 8px;
         }
 
         /* Input Area */
         .input-area {
-            padding: 20px;
+            padding: 24px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 0 0 20px 20px;
-            margin: 0 20px 20px 20px;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .input-container {
+            max-width: 800px;
+            margin: 0 auto;
             display: flex;
-            gap: 10px;
-            align-items: center;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
         }
 
         .input-field {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid transparent;
-            border-radius: 25px;
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
             font-size: 16px;
-            background: rgba(255, 255, 255, 0.9);
-            transition: all 0.3s ease;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s ease;
+            resize: none;
+            max-height: 120px;
+            min-height: 52px;
         }
 
         .input-field:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
         }
 
         .action-btn {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             border: none;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             font-size: 18px;
             cursor: pointer;
@@ -234,16 +304,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .action-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
         .action-btn.recording {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            animation: pulse 1s infinite;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            animation: pulse 2s infinite;
+        }
+
+        .action-btn.active {
+            background: linear-gradient(135deg, #10ac84, #1dd1a1);
         }
 
         @keyframes pulse {
@@ -254,20 +330,24 @@
 
         /* Camera Preview */
         .camera-preview {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
-            width: 200px;
-            height: 150px;
+            width: 280px;
+            height: 210px;
             background: #000;
-            border-radius: 10px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
             display: none;
         }
 
-        .camera-preview video {
+        .camera-preview.active {
+            display: block;
+        }
+
+        .camera-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -275,198 +355,381 @@
 
         .camera-controls {
             position: absolute;
-            bottom: 5px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .camera-btn {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border: none;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.9);
             color: #333;
-            font-size: 12px;
+            font-size: 16px;
             cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-btn:hover {
+            background: white;
+            transform: scale(1.1);
         }
 
         /* AI Features Panel */
-        .ai-features {
-            position: absolute;
-            top: 20px;
+        .ai-features-panel {
+            position: fixed;
+            top: 80px;
             right: 20px;
+            width: 280px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            z-index: 50;
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+        }
+
+        .ai-features-panel.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .features-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .feature-btn {
-            display: block;
             width: 100%;
-            padding: 10px 15px;
-            margin-bottom: 10px;
+            padding: 12px 16px;
             border: none;
-            border-radius: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
+            border-radius: 12px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #333;
             font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
         }
 
         .feature-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(4px);
         }
 
-        .feature-btn:last-child {
-            margin-bottom: 0;
+        .feature-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
         }
 
         /* Status Indicator */
         .status-indicator {
-            position: absolute;
-            bottom: 100px;
+            position: fixed;
+            bottom: 120px;
             right: 20px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 10px 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
             display: none;
+        }
+
+        .status-indicator.active {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .status-text {
             font-size: 14px;
             color: #333;
-            margin: 0;
+            font-weight: 500;
         }
 
-        .thinking-animation {
-            display: inline-block;
-            animation: thinking 1.5s infinite;
+        .thinking-dots {
+            display: flex;
+            gap: 2px;
         }
+
+        .thinking-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: thinking 1.4s infinite;
+        }
+
+        .thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+        .thinking-dot:nth-child(3) { animation-delay: 0.4s; }
 
         @keyframes thinking {
-            0%, 60%, 100% { transform: scale(1); }
-            30% { transform: scale(1.2); }
+            0%, 80%, 100% { transform: scale(1); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .code-language {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .copy-code {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-code:hover {
+            background: #e9ecef;
+            color: #333;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .history-panel {
-                width: 250px;
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 200;
             }
-            
-            .history-panel.collapsed {
-                transform: translateX(-200px);
+
+            .sidebar.collapsed {
+                transform: translateX(-100%);
             }
-            
-            .message-content {
-                max-width: 85%;
+
+            .main-content {
+                width: 100%;
             }
-            
-            .ai-features {
-                position: relative;
-                right: auto;
-                top: auto;
-                margin-bottom: 20px;
+
+            .camera-preview {
+                width: calc(100% - 40px);
+                height: 200px;
+            }
+
+            .ai-features-panel {
+                width: calc(100% - 40px);
+            }
+
+            .input-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .input-actions {
+                justify-content: center;
             }
         }
 
         /* Scrollbar Styling */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(45deg, #764ba2, #667eea);
+            background: linear-gradient(135deg, #764ba2, #667eea);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- History Dashboard -->
-        <div class="history-panel" id="historyPanel">
-            <div class="history-header">
-                <h2 class="history-title">Chat History</h2>
-                <button class="toggle-btn" id="toggleHistory">←</button>
+    <div class="app-container">
+        <!-- Sidebar History -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fas fa-history"></i>
+                    Chat History
+                </div>
+                <button class="toggle-sidebar" id="toggleSidebar">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
             </div>
             <div class="history-list" id="historyList">
                 <!-- History items will be populated here -->
             </div>
         </div>
 
-        <!-- Main Chat Area -->
-        <div class="main-chat">
+        <!-- Main Content -->
+        <div class="main-content">
             <div class="chat-header">
-                <h1 class="chat-title">🤖 Advanced AI Assistant</h1>
+                <div class="chat-title">
+                    <i class="fas fa-robot"></i>
+                    Advanced AI Assistant
+                </div>
+                <button class="ai-features-toggle" id="featuresToggle">
+                    <i class="fas fa-magic"></i>
+                    AI Tools
+                </button>
             </div>
 
             <div class="chat-messages" id="chatMessages">
                 <div class="message bot">
-                    <div class="message-avatar">🤖</div>
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
                     <div class="message-content">
-                        <p>Hello! I'm your advanced AI assistant with voice recognition, camera access, and comprehensive knowledge. I can help you with:</p>
-                        <ul style="margin-top: 10px; padding-left: 20px;">
-                            <li>Text conversations and Q&A</li>
-                            <li>Voice commands and speech recognition</li>
-                            <li>Image analysis and camera integration</li>
-                            <li>Code generation and debugging</li>
-                            <li>Creative writing and brainstorming</li>
-                            <li>Data analysis and calculations</li>
-                        </ul>
-                        <p style="margin-top: 10px;">How can I assist you today?</p>
+                        <p>👋 Hello! I'm your advanced AI assistant with powerful capabilities:</p>
+                        <br>
+                        <p><strong>🎤 Voice Recognition:</strong> Speak naturally and I'll understand</p>
+                        <p><strong>📷 Camera Integration:</strong> Analyze images and visual content</p>
+                        <p><strong>💻 Code Generation:</strong> Create, debug, and explain code</p>
+                        <p><strong>✨ Creative Writing:</strong> Stories, poems, and creative content</p>
+                        <p><strong>📊 Data Analysis:</strong> Process and analyze information</p>
+                        <p><strong>🌍 Multi-language:</strong> Translation and communication</p>
+                        <p><strong>🧮 Math & Science:</strong> Solve complex problems</p>
+                        <br>
+                        <p>How can I help you today? Try using voice commands or ask me anything!</p>
+                        <div class="message-time">Just now</div>
                     </div>
                 </div>
             </div>
 
             <div class="input-area">
                 <div class="input-container">
-                    <input type="text" class="input-field" id="messageInput" placeholder="Type your message or use voice/camera...">
-                    <button class="action-btn" id="voiceBtn" title="Voice Input">🎤</button>
-                    <button class="action-btn" id="cameraBtn" title="Camera">📷</button>
-                    <button class="action-btn" id="sendBtn" title="Send Message">📤</button>
+                    <div class="input-wrapper">
+                        <textarea class="input-field" id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
+                    </div>
+                    <div class="input-actions">
+                        <button class="action-btn" id="voiceBtn" title="Voice Input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="action-btn" id="cameraBtn" title="Camera">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <button class="action-btn" id="sendBtn" title="Send Message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Camera Preview -->
-            <div class="camera-preview" id="cameraPreview">
-                <video id="cameraVideo" autoplay muted></video>
-                <div class="camera-controls">
-                    <button class="camera-btn" id="captureBtn">📸</button>
-                    <button class="camera-btn" id="closeCameraBtn">✕</button>
-                </div>
+        <!-- Camera Preview -->
+        <div class="camera-preview" id="cameraPreview">
+            <video class="camera-video" id="cameraVideo" autoplay muted></video>
+            <div class="camera-controls">
+                <button class="camera-btn" id="captureBtn" title="Capture Image">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <button class="camera-btn" id="closeCameraBtn" title="Close Camera">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
+        </div>
 
-            <!-- AI Features Panel -->
-            <div class="ai-features">
-                <button class="feature-btn" onclick="activateFeature('code')">💻 Code Assistant</button>
-                <button class="feature-btn" onclick="activateFeature('creative')">✨ Creative Writing</button>
-                <button class="feature-btn" onclick="activateFeature('analysis')">📊 Data Analysis</button>
-                <button class="feature-btn" onclick="activateFeature('translate')">🌍 Translator</button>
-                <button class="feature-btn" onclick="activateFeature('math')">🧮 Math Solver</button>
+        <!-- AI Features Panel -->
+        <div class="ai-features-panel" id="aiFeatures">
+            <div class="features-title">
+                <i class="fas fa-magic"></i>
+                AI Tools & Features
             </div>
+            <button class="feature-btn" onclick="activateFeature('general')">
+                <i class="fas fa-comments"></i>
+                General Chat
+            </button>
+            <button class="feature-btn" onclick="activateFeature('code')">
+                <i class="fas fa-code"></i>
+                Code Assistant
+            </button>
+            <button class="feature-btn" onclick="activateFeature('creative')">
+                <i class="fas fa-feather-alt"></i>
+                Creative Writing
+            </button>
+            <button class="feature-btn" onclick="activateFeature('analysis')">
+                <i class="fas fa-chart-line"></i>
+                Data Analysis
+            </button>
+            <button class="feature-btn" onclick="activateFeature('translate')">
+                <i class="fas fa-language"></i>
+                Translator
+            </button>
+            <button class="feature-btn" onclick="activateFeature('math')">
+                <i class="fas fa-calculator"></i>
+                Math Solver
+            </button>
+            <button class="feature-btn" onclick="activateFeature('image')">
+                <i class="fas fa-image"></i>
+                Image Analysis
+            </button>
+        </div>
 
-            <!-- Status Indicator -->
-            <div class="status-indicator" id="statusIndicator">
-                <p class="status-text" id="statusText">AI is thinking...</p>
+        <!-- Status Indicator -->
+        <div class="status-indicator" id="statusIndicator">
+            <div class="status-text" id="statusText">AI is thinking</div>
+            <div class="thinking-dots">
+                <div class="thinking-dot"></div>
+                <div class="thinking-dot"></div>
+                <div class="thinking-dot"></div>
             </div>
         </div>
     </div>
@@ -474,12 +737,14 @@
     <script>
         // Global variables
         let chatHistory = [];
+        let conversationHistory = [];
         let isRecording = false;
         let recognition = null;
         let cameraStream = null;
         let currentFeature = 'general';
+        let messageCounter = 0;
 
-        // Initialize the application
+        // Initialize application
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
@@ -487,14 +752,15 @@
         function initializeApp() {
             setupEventListeners();
             initializeSpeechRecognition();
-            loadChatHistory();
-            setupKeyboardShortcuts();
+            setupAutoResize();
+            loadDefaultHistory();
+            console.log('🚀 AI Assistant initialized successfully!');
         }
 
         function setupEventListeners() {
             // Send message
             document.getElementById('sendBtn').addEventListener('click', sendMessage);
-            document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            document.getElementById('messageInput').addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
@@ -509,8 +775,21 @@
             document.getElementById('captureBtn').addEventListener('click', captureImage);
             document.getElementById('closeCameraBtn').addEventListener('click', closeCamera);
 
-            // History panel
-            document.getElementById('toggleHistory').addEventListener('click', toggleHistoryPanel);
+            // Sidebar toggle
+            document.getElementById('toggleSidebar').addEventListener('click', toggleSidebar);
+
+            // Features panel
+            document.getElementById('featuresToggle').addEventListener('click', toggleFeaturesPanel);
+
+            // Click outside to close panels
+            document.addEventListener('click', function(e) {
+                const featuresPanel = document.getElementById('aiFeatures');
+                const featuresToggle = document.getElementById('featuresToggle');
+                
+                if (!featuresPanel.contains(e.target) && !featuresToggle.contains(e.target)) {
+                    featuresPanel.classList.remove('active');
+                }
+            });
         }
 
         function initializeSpeechRecognition() {
@@ -523,13 +802,15 @@
                 recognition.onstart = function() {
                     isRecording = true;
                     document.getElementById('voiceBtn').classList.add('recording');
-                    showStatus('Listening...');
+                    showStatus('🎤 Listening...');
                 };
 
                 recognition.onresult = function(event) {
                     const transcript = event.results[0][0].transcript;
                     document.getElementById('messageInput').value = transcript;
                     hideStatus();
+                    // Auto-send voice messages
+                    setTimeout(() => sendMessage(), 500);
                 };
 
                 recognition.onend = function() {
@@ -540,18 +821,29 @@
 
                 recognition.onerror = function(event) {
                     console.error('Speech recognition error:', event.error);
+                    isRecording = false;
+                    document.getElementById('voiceBtn').classList.remove('recording');
                     hideStatus();
-                    showStatus('Voice recognition error. Please try again.');
+                    showStatus('❌ Voice recognition error. Please try again.');
                     setTimeout(hideStatus, 3000);
                 };
             } else {
-                console.log('Speech recognition not supported');
+                console.warn('Speech recognition not supported in this browser');
             }
+        }
+
+        function setupAutoResize() {
+            const textarea = document.getElementById('messageInput');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
         }
 
         function toggleVoiceRecognition() {
             if (!recognition) {
-                alert('Speech recognition is not supported in your browser');
+                showStatus('❌ Speech recognition not supported in your browser');
+                setTimeout(hideStatus, 3000);
                 return;
             }
 
@@ -564,20 +856,22 @@
 
         async function toggleCamera() {
             const cameraPreview = document.getElementById('cameraPreview');
-            const video = document.getElementById('cameraVideo');
+            const cameraBtn = document.getElementById('cameraBtn');
 
             if (cameraStream) {
                 closeCamera();
             } else {
                 try {
                     cameraStream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { width: 640, height: 480 } 
+                        video: { width: 1280, height: 720 } 
                     });
-                    video.srcObject = cameraStream;
-                    cameraPreview.style.display = 'block';
+                    document.getElementById('cameraVideo').srcObject = cameraStream;
+                    cameraPreview.classList.add('active');
+                    cameraBtn.classList.add('active');
                 } catch (error) {
                     console.error('Error accessing camera:', error);
-                    alert('Unable to access camera. Please check permissions.');
+                    showStatus('❌ Camera access denied. Please check permissions.');
+                    setTimeout(hideStatus, 3000);
                 }
             }
         }
@@ -593,24 +887,23 @@
             canvas.height = video.videoHeight;
             ctx.drawImage(video, 0, 0);
 
-            const imageData = canvas.toDataURL('image/png');
+            const imageData = canvas.toDataURL('image/jpeg', 0.8);
             
-            // Add captured image to chat
-            addMessage('user', 'Image captured 📸');
+            // Add captured image message
+            addMessage('user', '📸 Image captured for analysis');
             
             // Simulate AI image analysis
             setTimeout(() => {
                 analyzeImage(imageData);
-            }, 1000);
+            }, 1500);
         }
 
         function analyzeImage(imageData) {
-            // Simulate AI image analysis
             const analyses = [
-                "I can see this is an image. Based on the visual elements, this appears to be a photo taken with your camera.",
-                "This image shows various objects and lighting conditions. The composition suggests it was taken in real-time.",
-                "I've analyzed the image structure and can help you with questions about what I observe in the photo.",
-                "The image has been successfully captured and processed. I can discuss the visual elements I detect."
+                "🔍 **Image Analysis Complete**\n\nI can see this is a real-time image captured from your camera. The image shows:\n\n• Clear visual composition with good lighting\n• Various objects and details in the frame\n• Color palette and contrast levels are well-balanced\n\nI can help you analyze specific aspects of this image or answer questions about what I observe. What would you like to know more about?",
+                "📊 **Visual Analysis Results**\n\nBased on the captured image, I can detect:\n\n• **Scene Type:** Indoor/Outdoor environment\n• **Objects:** Multiple elements visible in frame\n• **Quality:** High resolution capture\n• **Lighting:** Natural/Artificial light sources\n\nWould you like me to focus on any particular aspect of the image?",
+                "🎯 **Image Processing Complete**\n\nI've successfully analyzed your captured image. Here's what I found:\n\n• **Technical Quality:** Good exposure and focus\n• **Content Analysis:** Various visual elements detected\n• **Composition:** Well-framed capture\n\nI can provide more detailed analysis of specific elements if you'd like. What aspects are you most interested in?",
+                "🔎 **Smart Image Recognition**\n\nYour image has been processed using advanced AI vision capabilities:\n\n• **Visual Elements:** Successfully identified multiple components\n• **Scene Understanding:** Context and environment analyzed\n• **Detail Recognition:** Fine details and textures processed\n\nI'm ready to answer any specific questions about what I see in your image!"
             ];
             
             const randomAnalysis = analyses[Math.floor(Math.random() * analyses.length)];
@@ -621,249 +914,11 @@
             if (cameraStream) {
                 cameraStream.getTracks().forEach(track => track.stop());
                 cameraStream = null;
-                document.getElementById('cameraPreview').style.display = 'none';
+                document.getElementById('cameraPreview').classList.remove('active');
+                document.getElementById('cameraBtn').classList.remove('active');
             }
         }
 
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
-            
-            if (!message) return;
-
-            // Add user message
-            addMessage('user', message);
-            input.value = '';
-
-            // Show thinking status
-            showStatus('AI is thinking...');
-
-            // Simulate AI response
-            setTimeout(() => {
-                const response = generateAIResponse(message);
-                addMessage('bot', response);
-                hideStatus();
-            }, 1000 + Math.random() * 2000);
-        }
-
-        function generateAIResponse(message) {
-            const responses = {
-                code: [
-                    "I'd be happy to help you with coding! Here's a solution:\n\n```javascript\nfunction example() {\n    console.log('Hello, World!');\n}\n```\n\nWould you like me to explain how this works?",
-                    "Let me analyze your code request and provide a comprehensive solution with best practices.",
-                    "I can help you debug, optimize, or create new code. What specific programming challenge are you facing?"
-                ],
-                creative: [
-                    "Here's a creative piece inspired by your request:\n\n*In the realm of imagination, where words dance like fireflies in the twilight...*\n\nWould you like me to continue this story?",
-                    "I love creative challenges! Let me craft something unique for you based on your idea.",
-                    "Creative writing is one of my favorite tasks. Here's an original piece inspired by your prompt..."
-                ],
-                analysis: [
-                    "Based on the data patterns I can analyze, here are the key insights:\n\n• Trend Analysis: [Simulated results]\n• Statistical Significance: High\n• Recommendations: [Generated suggestions]\n\nWould you like me to dive deeper into any specific aspect?",
-                    "I can process and analyze various types of data. What specific metrics or patterns would you like me to examine?",
-                    "Data analysis complete! Here are the key findings and actionable insights from your dataset."
-                ],
-                translate: [
-                    "Here's the translation:\n\n**English:** Hello, how are you?\n**Spanish:** Hola, ¿cómo estás?\n**French:** Bonjour, comment allez-vous?\n**German:** Hallo, wie geht es dir?\n\nWould you like translations in other languages?",
-                    "I can translate between over 100 languages. What would you like me to translate?",
-                    "Translation completed! I've provided accurate translations with cultural context where relevant."
-                ],
-                math: [
-                    "Let me solve this mathematical problem step by step:\n\n**Step 1:** Identify the equation type\n**Step 2:** Apply appropriate mathematical principles\n**Step 3:** Calculate the result\n\n**Answer:** [Calculated result]\n\nWould you like me to show alternative solving methods?",
-                    "Mathematics is my specialty! Here's the solution with detailed explanations.",
-                    "I've solved your math problem using advanced computational methods. The answer is verified and accurate."
-                ],
-                general: [
-                    "That's a great question! Based on my knowledge, here's what I can tell you: " + message.toLowerCase().includes('what') ? "This is a comprehensive topic that involves multiple aspects." : "I understand your inquiry and here's my detailed response.",
-                    "I'd be happy to help you with that! Here's a comprehensive answer based on the latest information available.",
-                    "That's an interesting topic! Let me provide you with a detailed and accurate response.",
-                    "I can definitely assist you with that question. Here's what I know about this subject.",
-                    "Great question! Based on my training data, here's a thorough explanation of this topic."
-                ]
-            };
-
-            const categoryResponses = responses[currentFeature] || responses.general;
-            const randomResponse = categoryResponses[Math.floor(Math.random() * categoryResponses.length)];
-            
-            return randomResponse;
-        }
-
-        function addMessage(sender, content) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            
-            const avatar = document.createElement('div');
-            avatar.className = 'message-avatar';
-            avatar.textContent = sender === 'user' ? '👤' : '🤖';
-            
-            const messageContent = document.createElement('div');
-            messageContent.className = 'message-content';
-            messageContent.innerHTML = formatMessage(content);
-            
-            messageDiv.appendChild(avatar);
-            messageDiv.appendChild(messageContent);
-            messagesContainer.appendChild(messageDiv);
-            
-            // Scroll to bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            
-            // Save to history
-            const historyItem = {
-                id: Date.now(),
-                sender: sender,
-                content: content,
-                timestamp: new Date().toISOString(),
-                title: content.length > 50 ? content.substring(0, 50) + '...' : content
-            };
-            
-            chatHistory.push(historyItem);
-            updateHistoryPanel();
-            saveChatHistory();
-        }
-
-        function formatMessage(content) {
-            // Format code blocks
-            content = content.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre style="background: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 10px 0;"><code>$2</code></pre>');
-            
-            // Format inline code
-            content = content.replace(/`([^`]+)`/g, '<code style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px; font-family: monospace;">$1</code>');
-            
-            // Format bold text
-            content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            // Format italic text
-            content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            
-            // Format line breaks
-            content = content.replace(/\n/g, '<br>');
-            
-            return content;
-        }
-
-        function activateFeature(feature) {
-            currentFeature = feature;
-            const featureNames = {
-                code: 'Code Assistant',
-                creative: 'Creative Writing',
-                analysis: 'Data Analysis',
-                translate: 'Translator',
-                math: 'Math Solver'
-            };
-            
-            addMessage('bot', `${featureNames[feature]} mode activated! I'm now optimized for ${feature} tasks. How can I help you?`);
-        }
-
-        function toggleHistoryPanel() {
-            const historyPanel = document.getElementById('historyPanel');
-            const toggleBtn = document.getElementById('toggleHistory');
-            
-            historyPanel.classList.toggle('collapsed');
-            toggleBtn.textContent = historyPanel.classList.contains('collapsed') ? '→' : '←';
-        }
-
-        function updateHistoryPanel() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
-            
-            // Group messages by conversation sessions
-            const sessions = groupMessagesBySession();
-            
-            sessions.forEach(session => {
-                const sessionDiv = document.createElement('div');
-                sessionDiv.className = 'history-item';
-                sessionDiv.onclick = () => loadSession(session);
-                
-                sessionDiv.innerHTML = `
-                    <div class="history-item-title">${session.title}</div>
-                    <div class="history-item-time">${formatTime(session.timestamp)}</div>
-                `;
-                
-                historyList.appendChild(sessionDiv);
-            });
-        }
-
-        function groupMessagesBySession() {
-            const sessions = [];
-            let currentSession = null;
-            
-            chatHistory.forEach(message => {
-                if (message.sender === 'user') {
-                    if (currentSession) {
-                        sessions.push(currentSession);
-                    }
-                    currentSession = {
-                        id: message.id,
-                        title: message.title,
-                        timestamp: message.timestamp,
-                        messages: [message]
-                    };
-                } else if (currentSession) {
-                    currentSession.messages.push(message);
-                }
-            });
-            
-            if (currentSession) {
-                sessions.push(currentSession);
-            }
-            
-            return sessions.reverse();
-        }
-
-        function loadSession(session) {
-            // This would typically load the full conversation
-            // For now, we'll just scroll to show the session was selected
-            const messagesContainer = document.getElementById('chatMessages');
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        function formatTime(timestamp) {
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diff = now - date;
-            
-            if (diff < 60000) return 'Just now';
-            if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-            if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-            return date.toLocaleDateString();
-        }
-
-        function showStatus(message) {
-            const statusIndicator = document.getElementById('statusIndicator');
-            const statusText = document.getElementById('statusText');
-            
-            statusText.innerHTML = message + ' <span class="thinking-animation">●</span>';
-            statusIndicator.style.display = 'block';
-        }
-
-        function hideStatus() {
-            document.getElementById('statusIndicator').style.display = 'none';
-        }
-
-        function saveChatHistory() {
-            // In a real application, this would save to a database
-            // For now, we'll use in-memory storage
-            console.log('Chat history saved:', chatHistory.length, 'messages');
-        }
-
-        function loadChatHistory() {
-            // In a real application, this would load from a database
-            // For now, we'll start with an empty history
-            chatHistory = [];
-        }
-
-        function setupKeyboardShortcuts() {
-            document.addEventListener('keydown', function(e) {
-                // Ctrl/Cmd + Enter to send message
-                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                    sendMessage();
-                }
-                
-                // Ctrl/Cmd + / to toggle voice
-                if ((e.ctrlKey || e.metaKey) && e.key === '/') {
-                    e.preventDefault();
-                    toggleVoiceRecognition();
-                }
-                
-                // Ctrl/Cmd + Shift + C to toggle camera
-                if ((e.ctrlKey || e.meta
