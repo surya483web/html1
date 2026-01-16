@@ -1,0 +1,104 @@
+<script>
+  const backendURL = "https://github.com/surya483web/html1/blob/main/backend"; // Use HTTPS or proxy in production
+
+  async function download() {
+    const linkEl = document.getElementById("instaLink");
+    const msg = document.getElementById("message");
+    const btn = document.getElementById("downloadBtn"); // optional: disable button while processing
+
+    if (!linkEl || !msg) {
+      console.error("Missing required DOM elements (#instaLink or #message).");
+      return;
+    }
+
+    const link = linkEl.value?.trim() || "";
+
+    // Basic validation: non-empty and looks like a URL (optionally check instagram domain)
+    try {
+      new URL(link);
+    } catch (e) {
+      msg.style.color = "red";
+      msg.textContent = "❌ Please paste a valid URL";
+      return;
+    }
+    // Optional stronger check:
+    // if (!/instagram\.com/i.test(link)) { ... }
+
+    msg.style.color = "orange";
+    msg.textContent = "⏳ Processing...";
+    if (btn) btn.disabled = true;
+
+    // Optional timeout using AbortController
+    const controller = new AbortController();
+    const timeoutMs = 30000;
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const response = await fetch(`${backendURL}/download`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: link }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeout);
+
+      const contentType = response.headers.get("content-type") || "";
+
+      let data;
+      if (contentType.includes("application/json")) {
+        // parse JSON safely
+        try {
+          data = await response.json();
+        } catch (err) {
+          throw new Error("Invalid JSON response from server");
+        }
+      } else {
+        // if the server returns a redirect or raw URL text, handle that
+        const text = await response.text();
+        // If you expect just a URL, use it; otherwise throw
+        if (text.trim()) {
+          data = { downloadUrl: text.trim() };
+        } else {
+          throw new Error("Unexpected response format from server");
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.error || response.statusText || "Server error");
+      }
+
+      const finalURL = data.media || data.downloadUrl || data.url;
+      if (!finalURL) {
+        throw new Error("No media URL returned from backend");
+      }
+
+      // Open the URL in a new tab in a way less likely to be blocked
+      const a = document.createElement("a");
+      a.href = finalURL;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      msg.style.color = "green";
+      msg.textContent = "✔ Download started (opened in a new tab)";
+    } catch (err) {
+      console.error(err);
+      if (err.name === "AbortError") {
+        msg.style.color = "red";
+        msg.textContent = "❌ Request timed out. Try again.";
+      } else if (err instanceof TypeError && err.message === "Failed to fetch") {
+        msg.style.color = "red";
+        msg.textContent = "❌ Network error or CORS blocked. Check backend CORS and protocol (HTTP/HTTPS).";
+      } else {
+        msg.style.color = "red";
+        msg.textContent = `❌ Error: ${err.message || "Something went wrong"}`;
+      }
+    } finally {
+      if (btn) btn.disabled = false;
+      clearTimeout(timeout);
+    }
+  }
+</script>
