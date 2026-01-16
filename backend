@@ -1,0 +1,42 @@
+ from flask import Flask, request, jsonify
+import requests
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)   # Allow frontend to access API
+
+RAPID_API_KEY = "YOUR_RAPIDAPI_KEY"   # ⭐ Replace with your API key
+
+@app.route("/", methods=["GET"])
+def home():
+    return "Instagram Downloader Backend Running!"
+
+@app.route("/download", methods=["POST"])
+def download():
+    data = request.get_json()
+    insta_url = data.get("url")
+
+    if not insta_url:
+        return jsonify({"error": "Instagram URL missing"}), 400
+
+    api_url = "https://instagram-scraper-api2.p.rapidapi.com/media_info"
+
+    headers = {
+        "x-rapidapi-key": RAPID_API_KEY,
+        "x-rapidapi-host": "instagram-scraper-api2.p.rapidapi.com"
+    }
+
+    params = {"url": insta_url}
+
+    try:
+        response = requests.get(api_url, headers=headers, params=params)
+        result = response.json()
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({"error": "Failed to fetch data", "details": str(e)}), 500
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+
