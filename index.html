@@ -1,123 +1,46 @@
- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Downloader</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            font-family: Arial, sans-serif;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+ <script>
+    const backendURL = "http://3.209.2.61:5000"; // Your EC2 backend API
+
+    async function download() {
+        const link = document.getElementById("instaLink").value;
+        const msg = document.getElementById("message");
+
+        if (link.trim() === "") {
+            msg.style.color = "red";
+            msg.innerHTML = "❌ Please paste a valid Instagram link";
+            return;
         }
 
-        .container {
-            background: #111;
-            padding: 30px;
-            width: 420px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 0 30px #ff006a;
-        }
+        msg.style.color = "yellow";
+        msg.innerHTML = "⏳ Processing...";
 
-        h2 {
-            margin-bottom: 20px;
-            color: #ff4da6;
-            text-shadow: 0 0 8px #ff4da6;
-        }
+        try {
+            const response = await fetch(`${backendURL}/download`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: link })   // ⭐ FIXED: backend expects "url"
+            });
 
-        input {
-            width: 90%;
-            padding: 12px;
-            border-radius: 6px;
-            border: none;
-            margin-bottom: 15px;
-            outline: none;
-            font-size: 15px;
-        }
+            const data = await response.json();
 
-        button {
-            width: 94%;
-            padding: 12px;
-            border: none;
-            background: #ff006a;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: 0.3s;
-        }
+            if (response.ok) {
+                msg.style.color = "#0f0";
+                msg.innerHTML = "✔ Download Data Received!";
 
-        button:hover {
-            background: #ff3380;
-        }
-
-        .msg {
-            margin-top: 15px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h2>Instagram Downloader</h2>
-
-        <input id="instaLink" type="text" placeholder="Paste Instagram link here...">
-
-        <button onclick="download()">Download</button>
-
-        <p class="msg" id="message"></p>
-    </div>
-
-    <script>
-        const backendURL = "http://3.209.2.61:5000"; // Your EC2 backend IP and port
-
-        async function download() {
-            const link = document.getElementById("instaLink").value;
-            const msg = document.getElementById("message");
-
-            if (link.trim() === "") {
-                msg.style.color = "red";
-                msg.innerHTML = "❌ Please paste a valid Instagram link";
-                return;
-            }
-
-            msg.style.color = "yellow";
-            msg.innerHTML = "⏳ Processing...";
-
-            try {
-                const response = await fetch(`${backendURL}/download`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ link })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    msg.style.color = "#0f0";
-                    msg.innerHTML = `✔ ${data.message || "Download ready!"}`;
-                    // Optional: If backend returns a URL, you can automatically redirect/download
-                    if (data.downloadUrl) {
-                        window.open(data.downloadUrl, "_blank");
-                    }
-                } else {
-                    msg.style.color = "red";
-                    msg.innerHTML = `❌ Error: ${data.message || "Something went wrong"}`;
+                // If API returns media URL
+                if (data.media || data.downloadUrl) {
+                    const finalURL = data.media || data.downloadUrl;
+                    window.open(finalURL, "_blank");
                 }
-            } catch (error) {
+            } else {
                 msg.style.color = "red";
-                msg.innerHTML = `❌ Connection error!`;
-                console.error(error);
+                msg.innerHTML = `❌ Error: ${data.error || "Something went wrong"}`;
             }
-        }
-    </script>
 
-</body>
-</html>
+        } catch (err) {
+            msg.style.color = "red";
+            msg.innerHTML = "❌ Cannot connect to backend!";
+            console.error(err);
+        }
+    }
+</script>
