@@ -1,41 +1,38 @@
- from flask import Flask, request, jsonify
-import requests
-from flask_cors import CORS
+from flask import Flask, request, send_file, jsonify
+from pytube import YouTube
+import os
 
 app = Flask(__name__)
-CORS(app)   # Allow frontend to access API
 
-RAPID_API_KEY = "fb7cdd4e9emshd86fb4a8f84b087p1fef88jsn6b6e865dced1"   # ⭐ Add your API key here
-
-@app.route("/", methods=["GET"])
-def home():
-    return "Instagram Downloader Backend Running!"
+DOWNLOAD_FOLDER = "downloads"
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route("/download", methods=["POST"])
-def download():
-    data = request.get_json()
-    insta_url = data.get("url")
+def download_video():
+    data = request.json
+    url = data.get("url")
 
-    if not insta_url:
-        return jsonify({"error": "Instagram URL missing"}), 400
-
-    api_url = "https://instagram-scraper-api2.p.rapidapi.com/media_info"
-
-    headers = {
-        "x-rapidapi-key": RAPID_API_KEY,
-        "x-rapidapi-host": "instagram-scraper-api2.p.rapidapi.com"
-    }
-
-    params = {"url": insta_url}
+    if not url:
+        return jsonify({"error": "No URL provided"}), 400
 
     try:
-        response = requests.get(api_url, headers=headers, params=params)
-        result = response.json()
-        return jsonify(result)
+        yt = YouTube(url)
+        stream = yt.streams.get_highest_resolution()
+
+        file_path = stream.download(DOWNLOAD_FOLDER)
+        file_name = os.path.basename(file_path)
+
+        return jsonify({"file": file_name}), 200
 
     except Exception as e:
-        return jsonify({"error": "Failed to fetch data", "details": str(e)}), 500
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/get-video/<filename>")
+def get_video(filename):
+    path = os.path.join(DOWNLOAD_FOLDER, filename)
+    return send_file(path, as_attachment=True)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)     # ⭐ IMPORTANT FIX
+    app.run(debug=True)
