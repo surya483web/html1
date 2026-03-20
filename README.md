@@ -1,89 +1,15 @@
- <!DOCTYPE html>
-<style>
-/* RESPONSIVE FIXES */
-*{
-  box-sizing: border-box;
-}
-
-/* Make header items stack on small screens */
-@media (max-width: 600px) {
-  .header{
-    padding-left: 0;
-    text-align: center;
-  }
-
-  ul{
-    display: block;
-    padding: 0;
-    margin: 0;
-  }
-
-  li{
-    display: inline-block;
-    margin: 5px;
-  }
-
-  .search{
-    margin-left: 0;
-    width: 100%;
-    text-align: center;
-  }
-
-  .search input{
-    width: 90%;
-  }
-
-  .products{
-    padding-left: 0;
-    text-align: center;
-  }
-
-  .box{
-    width: 90%;
-    margin-bottom: 20px;
-  }
-
-  .box img{
-    width: 100%;
-    height: auto;
-  }
-
-  .buy{
-    padding-left: 0;
-    text-align: center;
-  }
-}
-
-/* Tablet layout */
-@media (min-width: 601px) and (max-width: 900px){
-  .products{
-    padding-left: 10%;
-  }
-
-  .box{
-    width: 45%;
-    margin: 10px;
-  }
-
-  .box img{
-    width: 100%;
-  }
-}
-
-/* Large screens */
-@media (min-width: 901px){
-  .box img{
-    width: 100%;
-  }
-}
-
+ <style> 
 .header{
-  padding-left: 35%;
+  padding-left: 44%;
   background-color: rgb(150, 202, 191) ;
   border-color: black;
   border: 5px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+}
+.button{
+  column-gap: 20px;
+  text-align: center;
 }
 
 li,ul,h1{
@@ -99,10 +25,10 @@ li:hover{
 
 .search{
   margin-top:20px ;
-  margin-left:20%;
+  margin-left:25%;
   input{
-    width: 80%;
-    padding: 6px;
+    width: 70%;
+    padding: 10px;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
   }
@@ -110,7 +36,7 @@ li:hover{
 
 .products{
    margin-top: 5%;
-    padding-left: 29%;
+    padding-left: 42%;
 }
 
 .box{
@@ -124,7 +50,7 @@ li:hover{
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .buy{
-  padding-left: 30%;
+  padding-left: 35%;
   padding-bottom: 10%;
   cursor: pointer;
 }
@@ -148,9 +74,9 @@ li:hover{
   <div class="header">
     <nav><h1>ℙ𝔼ℝ𝔽𝕌𝕄𝔼𝕊</h1></nav>
     <ul>
-      <li>Home|</li>
-      <li>Produucts|</li>
-      <li>About Us</li>
+      <li class="button">Home|</li>
+      <li class="button">Produucts|</li>
+      <li class="button">About Us</li>
     </ul>
   </div>
   <div class="search">
