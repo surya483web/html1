@@ -93,7 +93,7 @@ li:hover{
 
   <div class="products">
     <div class="box">
-    <img src="C:\Users\Admin\Documents\html begining\perfume.jpeg">
+    <img src="perfume.jpeg">
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vel nostrum repellat minima quos ex porro, fugiat officia hic sunt, ipsa voluptatem enim vitae tempora temporibus optio necessitatibus nesciunt laudantium.</p>
     <div class="buy">
     <a href="https://wa.me/919342792571"><input type="button" value="BUY NOW"></a>
@@ -103,7 +103,7 @@ li:hover{
 
 <div class="products">
     <div class="box">
-    <img src="C:\Users\Admin\Documents\html begining\perfume.jpeg">
+    <img src="perfume.jpeg">
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vel nostrum repellat minima quos ex porro, fugiat officia hic sunt, ipsa voluptatem enim vitae tempora temporibus optio necessitatibus nesciunt laudantium.</p>
     <div class="buy">
     <a href="https://wa.me/919342792571"><input type="button" value="BUY NOW"></a>
@@ -112,9 +112,12 @@ li:hover{
   </div>
 
   <div class="about">
+
+
   </div>
   <div class="contact">
 
   </div>
 </body>
 </html>
+ 
