@@ -1,3 +1,81 @@
+ <!DOCTYPE html>
+<style>
+/* RESPONSIVE FIXES */
+*{
+  box-sizing: border-box;
+}
+
+/* Make header items stack on small screens */
+@media (max-width: 600px) {
+  .header{
+    padding-left: 0;
+    text-align: center;
+  }
+
+  ul{
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+
+  li{
+    display: inline-block;
+    margin: 5px;
+  }
+
+  .search{
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .search input{
+    width: 90%;
+  }
+
+  .products{
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .box{
+    width: 90%;
+    margin-bottom: 20px;
+  }
+
+  .box img{
+    width: 100%;
+    height: auto;
+  }
+
+  .buy{
+    padding-left: 0;
+    text-align: center;
+  }
+}
+
+/* Tablet layout */
+@media (min-width: 601px) and (max-width: 900px){
+  .products{
+    padding-left: 10%;
+  }
+
+  .box{
+    width: 45%;
+    margin: 10px;
+  }
+
+  .box img{
+    width: 100%;
+  }
+}
+
+/* Large screens */
+@media (min-width: 901px){
+  .box img{
+    width: 100%;
+  }
+}
 
 .header{
   padding-left: 35%;
