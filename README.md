@@ -7,32 +7,62 @@
 li,ul,h1{
   display:inline;
 }
+
 ul{
   margin-left: 60%;
 }
+
 li:hover{
   color: aliceblue;
   cursor: pointer;
 }
+
 .search{
   margin-top:20px ;
-  margin-left:30%;
+  margin-left:20%;
   input{
-    width: 60%;
+    width: 80%;
     padding: 6px;
     border-radius: 5px;
- 
   }
 }
 
-</style>
+.products{
+   margin-top: 5%;
+    padding-left: 29%;
+}
 
+.box{
+  border-color: rgb(0, 0, 0);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 5px;
+  display: inline-block;
+  width: 277px;
+  cursor: pointer;
+}
+.buy{
+  padding-left: 30%;
+  padding-bottom: 10px;
+}
+.buy:hover{
+  background-color: rgb(20, 231, 199)
+  color: rgb(147, 127, 127);
+
+}
+.box:hover{
+  background-color: gray;
+  color: rgb(255, 255, 255);
+}
+
+</style>
 
 <html lang="en">
 <head>
   <title>Document</title>
 </head>
 <body>
+
   <div class="header">
     <nav><h1>PERFUMES</h1></nav>
     <ul>
@@ -40,18 +70,34 @@ li:hover{
       <li>Produucts|</li>
       <li>About Us</li>
     </ul>
-
   </div>
+
   <div class="search">
     <input type="search" placeholder="Search"  value="">
-
   </div>
+
   <div class="products">
-    <img src="https://source.unsplash.com/220x220/?perfume">
+    <div class="box">
+    <img src="C:\Users\Admin\Documents\html begining\perfume.jpeg">
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vel nostrum repellat minima quos ex porro, fugiat officia hic sunt, ipsa voluptatem enim vitae tempora temporibus optio necessitatibus nesciunt laudantium.</p>
-
+    <div class="buy">
+    <a href="https://wa.me/919342792571"><input type="button" value="BUY NOW"></a>
+    </div>
+    </div>
   </div>
+
+<div class="products">
+    <div class="box">
+    <img src="C:\Users\Admin\Documents\html begining\perfume.jpeg">
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vel nostrum repellat minima quos ex porro, fugiat officia hic sunt, ipsa voluptatem enim vitae tempora temporibus optio necessitatibus nesciunt laudantium.</p>
+    <div class="buy">
+    <a href="https://wa.me/919342792571"><input type="button" value="BUY NOW"></a>
+    </div>
+    </div>
+  </div>
+
   <div class="about">
+
 
   </div>
   <div class="contact">
