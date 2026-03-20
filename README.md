@@ -1,5 +1,4 @@
- <!DOCTYPE html>
-<style>
+
 .header{
   padding-left: 35%;
   background-color: rgb(150, 202, 191) ;
