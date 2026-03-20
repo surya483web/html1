@@ -1,15 +1,34 @@
  <!DOCTYPE html>
 <style>
 .header{
-  background-color: rgb(20, 231, 199)
+  padding-left: 35%;
+  background-color: rgb(151, 193, 184) ;
+  border-color: black;
+  border: 5px;
+  border-radius: 10px;
+}
+
+.board{
+  text-decoration: underline;
+  padding-right: 50%;
+  margin-bottom: 5%;
+
+   
+  
   
 }
+
+
 li,ul,h1{
   display:inline;
 }
 
 ul{
   margin-left: 60%;
+  .board{
+    column-gap: 30%;
+
+  }
 }
 
 li:hover{
@@ -43,12 +62,11 @@ li:hover{
 }
 .buy{
   padding-left: 30%;
-  padding-bottom: 10px;
+  padding-bottom: 10%;
 }
 .buy:hover{
   background-color: rgb(20, 231, 199)
-  color: rgb(147, 127, 127);
-
+  color rgb(147, 127, 127);
 }
 .box:hover{
   background-color: gray;
@@ -64,21 +82,21 @@ li:hover{
 <body>
 
   <div class="header">
-    <nav><h1>PERFUMES</h1></nav>
-    <ul>
+    <nav><h1>ℙ𝔼ℝ𝔽𝕌𝕄𝔼𝕊</h1></nav>
+    <ul><div class="board">
       <li>Home|</li>
       <li>Produucts|</li>
       <li>About Us</li>
     </ul>
   </div>
-
+  </div>
   <div class="search">
     <input type="search" placeholder="Search"  value="">
   </div>
 
   <div class="products">
     <div class="box">
-    <img src="perfume.jpeg">
+    <img src="C:\Users\Admin\Documents\html begining\perfume.jpeg">
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vel nostrum repellat minima quos ex porro, fugiat officia hic sunt, ipsa voluptatem enim vitae tempora temporibus optio necessitatibus nesciunt laudantium.</p>
     <div class="buy">
     <a href="https://wa.me/919342792571"><input type="button" value="BUY NOW"></a>
@@ -88,7 +106,7 @@ li:hover{
 
 <div class="products">
     <div class="box">
-    <img src="perfume.jpeg">
+    <img src="C:\Users\Admin\Documents\html begining\perfume.jpeg">
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vel nostrum repellat minima quos ex porro, fugiat officia hic sunt, ipsa voluptatem enim vitae tempora temporibus optio necessitatibus nesciunt laudantium.</p>
     <div class="buy">
     <a href="https://wa.me/919342792571"><input type="button" value="BUY NOW"></a>
