@@ -2,7 +2,7 @@
 <style>
 .header{
   padding-left: 35%;
-  background-color: rgb(151, 193, 184) ;
+  background-color: rgb(150, 202, 191) ;
   border-color: black;
   border: 5px;
   border-radius: 10px;
@@ -12,10 +12,6 @@
   text-decoration: underline;
   padding-right: 50%;
   margin-bottom: 5%;
-
-   
-  
-  
 }
 
 
@@ -63,6 +59,7 @@ li:hover{
 .buy{
   padding-left: 30%;
   padding-bottom: 10%;
+  cursor: pointer;
 }
 .buy:hover{
   background-color: rgb(20, 231, 199)
@@ -115,8 +112,6 @@ li:hover{
   </div>
 
   <div class="about">
-
-
   </div>
   <div class="contact">
 
