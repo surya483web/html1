@@ -1,6 +1,6 @@
  <style> 
 .header{
-  padding-left: 44%;
+  padding-left: 41%;
   background-color: rgb(150, 202, 191) ;
   border-color: black;
   border: 5px;
@@ -25,7 +25,7 @@ li:hover{
 
 .search{
   margin-top:20px ;
-  margin-left:25%;
+  margin-left:22%;
   input{
     width: 70%;
     padding: 10px;
@@ -36,7 +36,7 @@ li:hover{
 
 .products{
    margin-top: 5%;
-    padding-left: 42%;
+    padding-left: 39%;
 }
 
 .box{
