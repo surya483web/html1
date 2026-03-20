@@ -6,10 +6,12 @@
   border-color: black;
   border: 5px;
   border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
 }
 
 li,ul,h1{
-  display:inline;
+   display: inline;
+  
 }
 
 
@@ -25,6 +27,7 @@ li:hover{
     width: 80%;
     padding: 6px;
     border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
   }
 }
 
@@ -41,6 +44,7 @@ li:hover{
   display: inline-block;
   width: 277px;
   cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .buy{
   padding-left: 30%;
