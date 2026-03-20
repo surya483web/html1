@@ -8,24 +8,10 @@
   border-radius: 10px;
 }
 
-.board{
-  text-decoration: underline;
-  padding-right: 50%;
-  margin-bottom: 5%;
-}
-
-
 li,ul,h1{
   display:inline;
 }
 
-ul{
-  margin-left: 60%;
-  .board{
-    column-gap: 30%;
-
-  }
-}
 
 li:hover{
   color: aliceblue;
@@ -80,12 +66,11 @@ li:hover{
 
   <div class="header">
     <nav><h1>ℙ𝔼ℝ𝔽𝕌𝕄𝔼𝕊</h1></nav>
-    <ul><div class="board">
+    <ul>
       <li>Home|</li>
       <li>Produucts|</li>
       <li>About Us</li>
     </ul>
-  </div>
   </div>
   <div class="search">
     <input type="search" placeholder="Search"  value="">
@@ -120,4 +105,3 @@ li:hover{
   </div>
 </body>
 </html>
- 
