@@ -1,42 +1,51 @@
  <style> 
 .header{
   padding-left: 41%;
+  padding-bottom: 2%;
   background-color: rgb(150, 202, 191) ;
   border-color: black;
   border: 5px;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
 }
 .button{
   column-gap: 20px;
   text-align: center;
 }
 
-li,ul,h1{
+p{
    display: inline;
+   
   
 }
 
 
-li:hover{
+p:hover{
   color: aliceblue;
   cursor: pointer;
 }
 
 .search{
-  margin-top:20px ;
-  margin-left:22%;
+  display: inline;
+  margin-top:25px ;
+  margin-left:15%;
   input{
     width: 70%;
     padding: 10px;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
   }
+  .navbar{
+  padding-left: 9%;
+  display: inline-block;
+  cursor: pointer;
+  
+  
+} 
 }
 
 .products{
    margin-top: 5%;
-    padding-left: 39%;
+    padding-left: 37%;
 }
 
 .box{
@@ -64,23 +73,33 @@ li:hover{
 }
 
 </style>
-
 <html lang="en">
 <head>
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
+    <br>
+    <br>
   <div class="header">
     <nav><h1>ℙ𝔼ℝ𝔽𝕌𝕄𝔼𝕊</h1></nav>
-    <ul>
-      <li class="button">Home|</li>
-      <li class="button">Produucts|</li>
-      <li class="button">About Us</li>
-    </ul>
+    
+      <p class="button">Home|</p>
+      <p class="button">Produucts|</p>
+      <p class="button">About Us</p>
   </div>
+  <br>
+  <br>
+
+
   <div class="search">
     <input type="search" placeholder="Search"  value="">
+
+    <div class="navbar">
+   <i class="fa-solid fa-bars"></i>
+   </div>
+
+
   </div>
 
   <div class="products">
